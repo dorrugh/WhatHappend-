@@ -112,6 +112,10 @@ public class App {
                 break;
             case "get":
                 getItems(noun, room);
+                break;
+            case "look":
+                look(noun, room);
+                break;
         }
     }
 
@@ -124,14 +128,20 @@ public class App {
         }
     }
 
+    private void look(String noun, JSONObject room) {
+        if (noun.equals("here")) {
+            System.out.println(room.get("description"));
+        }
+    }
+
     private void locationChange(String noun, JSONObject room) {
         currentRoom = (String) room.get(noun);
     }
 
-
-    private static void showStatus () {
+    private static void showStatus() {
             System.out.println("---------------------------");
             System.out.println("You are in the " + currentRoom);
+            System.out.println("You see a " + "[item]");
             System.out.println("-----------------------------");
         }
     }

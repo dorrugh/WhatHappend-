@@ -1,4 +1,4 @@
 {
   "verbs": ["go", "look", "get"],
-  "nouns": ["north", "south", "east", "west", "knife", "note"]
+  "nouns": ["north", "south", "east", "west", "knife", "note", "here"]
 }
