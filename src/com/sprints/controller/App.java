@@ -3,6 +3,8 @@ package com.sprints.controller;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 import org.json.simple.JSONArray;
@@ -19,7 +21,7 @@ public class App {
 
     Scanner myObj = new Scanner(System.in);
 
-    public void execute() {
+    public void execute() throws IOException {
         //displays splash screen
         welcome();
         start();
@@ -33,8 +35,8 @@ public class App {
 
         while (!gameOver) {
             showStatus();
-            System.out.println(">");
-            String playerCommand = myObj.nextLine(); //changed variable name from "command" to "playerCommand" for better readability
+            System.out.printf(">");
+            String playerCommand = myObj.nextLine().toLowerCase(); //changed variable name from "command" to "playerCommand" for better readability
             List<String> input = new ArrayList<>(Arrays.asList(playerCommand.split(" ")));
             parseInput(input);
             //if player inputs "quit" it will break out of the while loop and exit the game----
@@ -56,10 +58,8 @@ public class App {
         System.out.println("go [direction]\nget [item]\nlook [item]\nhelp (allows you to view in game commands)");
     }
 
-    private void welcome(){
-
-        //read from txt later
-        System.out.println("Kidnapped");
+    private void welcome() throws IOException {
+        txtFileReader("title.txt");
         //read from txt later
         System.out.println("You awake to find yourself in a twisted escape game.\n Can you gather all the clues and escape with your life in tact before time runs out?");
     }
@@ -154,5 +154,15 @@ public class App {
         System.out.println("---------------------------");
         System.out.println("You are in the " + currentRoom);
         System.out.println("-----------------------------");
+    }
+
+    private String txtFileReader (String filename) throws IOException {
+        if (Files.exists(Path.of("data/text_file/"+ filename))) {
+            String file = Files.readString(Path.of("data/text_file/" + filename));
+            System.out.println("\u001B[31m" + file + "\u001B[37m");
+            return file;
+        } else {
+            throw new IOException("Please verify welcome.txt location");
+        }
     }
 }
