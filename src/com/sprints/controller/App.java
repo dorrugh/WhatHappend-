@@ -62,6 +62,8 @@ public class App {
         txtFileReader("title.txt");
         //read from txt later
         System.out.println("You awake to find yourself in a twisted escape game.\n Can you gather all the clues and escape with your life in tact before time runs out?");
+        System.out.println("---------------------");
+        getCommands();
     }
 
     private void parseInput(List<String> input) {
@@ -125,6 +127,7 @@ public class App {
 
     }
 
+<<<<<<< HEAD
     private void playerActions(String noun, String verb, JSONObject room, JSONObject roomsObj, String location, JSONArray synonymObj) {
         JSONArray verbObj1 = (JSONArray) synonymObj.get(0);
         JSONArray verbObj2 = (JSONArray) synonymObj.get(1);
@@ -136,6 +139,20 @@ public class App {
             getItems(room);
         }else {
 
+=======
+    private void playerActions(String noun, String verb, JSONObject room, JSONObject roomsObj, String location) {
+        switch (verb) {
+            // if verb is go pass to locationChange function
+            case "go":
+                locationChange(noun, room, roomsObj, location);
+                break;
+            case "get":
+                getItems(room);
+                break;
+            case "look":
+                look(noun, room);
+                break;
+>>>>>>> Dev
         }
     }
 
@@ -157,6 +174,12 @@ public class App {
         }
         else {
             System.out.println("You cannot go that way");
+        }
+    }
+
+    private void look(String noun, JSONObject room) {
+        if (noun.equals("here")) {
+            System.out.println(room.get("description"));
         }
     }
 
