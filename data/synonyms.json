@@ -1,19 +1,22 @@
-{
-  "go": [
-      "move",
-      "run",
-      "walk"
+[
+  [
+    "go",
+    "move",
+    "run",
+    "walk"
   ],
-  "look": [
-      "see",
-      "view",
-      "read"
-    ],
 
-  "get": [
-      "grab",
-      "pickup",
-      "select"
-    ]
+  [
+    "get",
+    "grab",
+    "pickup",
+    "select"
+  ],
 
-}
+  [
+    "look",
+    "see",
+    "view",
+    "read"
+  ]
+]
