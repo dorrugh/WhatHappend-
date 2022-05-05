@@ -42,6 +42,7 @@ public class Game {
         welcome();
         while (!gameOver) {
             if (!TimeElapsed.getTime().equals("0")) {
+                checkWin();
                 showStatus();
                 bookLoss();
                 String playerCommand = promptPlayer();
@@ -83,6 +84,16 @@ public class Game {
         System.out.println();
         TextFileReader.getInstance().txtFileReader("/gameover.txt");
         System.exit(0);
+    }
+
+    private void checkWin() throws IOException {
+        if (Player.getInstance().getInventory().contains("it")) {
+            System.out.println("You pull the book out of the shelf and it opens a secret door.");
+            System.out.println();
+            gameOver = true;
+            TextFileReader.getInstance().txtFileReader("/escaped.txt");
+            System.exit(0);
+        }
     }
 
     private void bookLoss() throws IOException {
