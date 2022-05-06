@@ -25,11 +25,12 @@ public class OurJSONParser {
     // ******** Fields **********
     private static JSONParser jsonParser = new JSONParser();
     private static JSONObject roomsJSON;
-
+    private static JSONObject books;
     private JSONObject commandJSON;
-    private JSONArray synJSON;
     private JSONObject inventoryJSON;
+    private JSONArray synJSON;
     private List<String> commands;
+
 
     //******** CTOR **********
     // read JSON info as streams and parse
@@ -38,6 +39,10 @@ public class OurJSONParser {
         roomsJSON = (JSONObject) jsonParser.parse(new InputStreamReader(Objects.requireNonNull(OurJSONParser.class.getResourceAsStream(ROOMS))));
         inventoryJSON = (JSONObject) jsonParser.parse(new InputStreamReader(Objects.requireNonNull(OurJSONParser.class.getResourceAsStream(INVENTORY))));
         synJSON = (JSONArray) jsonParser.parse(new InputStreamReader(Objects.requireNonNull(OurJSONParser.class.getResourceAsStream(SYN))));
+        JSONObject westHall = (JSONObject) roomsJSON.get("west hall");
+        JSONObject hallItems = (JSONObject) westHall.get("item");
+        JSONObject bookcase = (JSONObject) hallItems.get("bookcase");
+        books = (JSONObject) bookcase.get("books");
         commands = new ArrayList<>();
     }
 
@@ -71,10 +76,10 @@ public class OurJSONParser {
         JSONArray items = (JSONArray) commandJSON.get("items");
         JSONObject room = (JSONObject) roomsJSON.get(Player.getInstance().getCurrentRoom());
         JSONObject roomItems = (JSONObject) room.get("item");
-        JSONObject westHall = (JSONObject) roomsJSON.get("west hall");
-        JSONObject hallItems = (JSONObject) westHall.get("item");
-        JSONObject bookcase = (JSONObject) hallItems.get("bookcase");
-        JSONObject books = (JSONObject) bookcase.get("books");
+//        JSONObject westHall = (JSONObject) roomsJSON.get("west hall");
+//        JSONObject hallItems = (JSONObject) westHall.get("item");
+//        JSONObject bookcase = (JSONObject) hallItems.get("bookcase");
+//        books = (JSONObject) bookcase.get("books");
         JSONObject clueHolder = null;
 
         if (command.size() == 1) {
@@ -87,11 +92,15 @@ public class OurJSONParser {
         else {
             commands.add(command.get(0));
             commands.add(command.get(1));
-            Player.getInstance().playerActions(commands, room, roomItems, roomsJSON, synJSON, items, inventoryJSON, books, null);
+            Player.getInstance().playerActions(commands, room, roomItems, roomsJSON, synJSON, items, inventoryJSON, getBooks(), null);
         }
     }
 
     static JSONObject getRoomsJSON() {
         return roomsJSON;
+    }
+
+    static JSONObject getBooks() {
+        return books;
     }
 }

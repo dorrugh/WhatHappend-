@@ -42,33 +42,30 @@ public class Game {
         welcome();
         while (!gameOver) {
             if (!TimeElapsed.getTime().equals("0")) {
-                checkWin();
                 showStatus();
-                bookLoss();
+                bookShelfCheck();
                 String playerCommand = promptPlayer();
+
+                parser.playerInput(playerCommand);
+                Thread.sleep(1000);
+                //Clear function coming from external jar
+                Console.clear();
 
                 //if player inputs "quit" it will break out of the while loop and exit the game----
                 if ("quit".equals(playerCommand) || ("q".equals(playerCommand))) {
                     quit();
                 }
-                if ("restart".equals(playerCommand)) {
+                else if ("restart".equals(playerCommand)) {
                     restart();
                 }
-                if ("help".equals(playerCommand)) {
+                else if ("help".equals(playerCommand)) {
                     getCommands();
                 }
-                //encrypted command to end game if timer ends
-                if ("mcdhapwt123".equals(playerCommand)) {
-                    endGame();
-                }
-                if ("music".equals(playerCommand)) {
+                else if ("music".equals(playerCommand)) {
                     toggleSound();
                 }
-                //Clear function coming from external jar
-                parser.playerInput(playerCommand);
-                Thread.sleep(1000);
-                Console.clear();
-            } else {
+            }
+            else {
                 gameOver = true;
                 endGame();
                 return;
@@ -77,14 +74,16 @@ public class Game {
     }
 
     // ends the game with Ascii art if timer ends
-    private void endGame() throws IOException {
+    private void endGame() throws IOException, InterruptedException {
         if (TimeElapsed.getTime().equals("0")) {
-            System.out.println("Time's Up! You just fell through the trap door!!!");
+            Utils.printWithDelays("Your body begins to stiffen and agony takes the name of each breath. Your world fades to black\nas you fall to the ground...");
         }
         else {
             System.out.println("You chose..... Poorly.");
         }
-        System.out.println();
+        Console.blankLines(1);
+        TimeUnit.SECONDS.sleep(2);
+        Console.blankLines(1);
         TextFileReader.getInstance().txtFileReader("/gameover.txt");
         System.exit(0);
     }
@@ -101,33 +100,31 @@ public class Game {
     }
 
     // End game with a loss if select 2 incorrect books
-    private void bookLoss() throws IOException {
-        JSONObject bookCheck = OurJSONParser.getRoomsJSON();
-        JSONObject westHall = (JSONObject) bookCheck.get("west hall");
-        JSONObject hallItems = (JSONObject) westHall.get("item");
-        JSONObject bookcase = (JSONObject) hallItems.get("bookcase");
-        JSONObject books = (JSONObject) bookcase.get("books");
-        Set<String> remainingBooks = books.keySet();
+    private void bookShelfCheck() throws IOException, InterruptedException {
+        Set<String> remainingBooks = OurJSONParser.getBooks().keySet();
         int bookSelections = remainingBooks.size() - (remainingBooks.size() - 2);
         if (remainingBooks.size() <= bookSelections && remainingBooks.contains("it")) {
             endGame();
+        }
+        else {
+            checkWin();
         }
     }
 
     // welcomes to game by displaying ascii and break description of game
     private void welcome() throws IOException, InterruptedException, UnsupportedAudioFileException, LineUnavailableException {
         TextFileReader.getInstance().txtFileReader("/title.txt");
-        pressEnterToContinue();
+        Utils.pressEnterToContinue();
         Console.clear();
         //read from txt later
         String description = "You awake to find yourself in a twisted escape game. Can you gather all the clues and escape\nwith your life in tact before time runs out?";
-        printWithDelays(description);
+        Utils.printWithDelays(description);
         Console.blankLines(2);
         System.out.println("-----------------------------");
         getCommands();
-        pressEnterToContinue();
+        Utils.pressEnterToContinue();
         Console.clear();
-        printWithDelays("...You feel a sharp prick.");
+        Utils.printWithDelays("...You feel a sharp prick.");
         playSound("/Sound.wav");
     }
 
@@ -219,7 +216,7 @@ public class Game {
     // prompts the user to enter commands until timer ends
     private String promptPlayer() {
         // encrypted default command calls endGame() when timer ends
-        String playerCommand = "mcdhapwt123";
+        String playerCommand = "";
         if (!TimeElapsed.getTime().equals("0")) {
             System.out.printf(">");
             playerCommand = myObj.nextLine();
@@ -247,23 +244,4 @@ public class Game {
         }
     }
 
-
-    private static void printWithDelays(String data)
-            throws InterruptedException {
-        for (char ch:data.toCharArray()) {
-            System.out.print(ch);
-            TimeUnit.MILLISECONDS.sleep(20);
-        }
-    }
-
-    // prompts players to press enter to continue game
-    private void pressEnterToContinue() {
-        Console.blankLines(1);
-        System.out.println("Press ENTER to continue");
-        try {
-            System.in.read(new byte[2]);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }

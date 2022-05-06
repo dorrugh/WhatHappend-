@@ -19,7 +19,6 @@ public class Player {
     private List<String> inventory = new ArrayList<>();
     private List<String> cluesFound = new ArrayList<>();
     private boolean itemEquipped = false;
-    private int tries = 2;
 
     // ******** Business Methods **********
     /* we do not want to instantiate multiple.
@@ -172,7 +171,6 @@ public class Player {
             JSONObject book = (JSONObject) books.get(noun);
             String description = (String) book.get("description");
             System.out.println(description);
-            tries--;
         }
         // gives description if so prints out that room description
         else if (noun.equals(getCurrentRoom()) || "here".equals(noun) && itemEquipped) {
@@ -200,6 +198,7 @@ public class Player {
             System.out.println("Too dark to see. Some light would help");
             return;
         }
+        Utils.pressEnterToContinue();
     }
 
     public String getCurrentRoom() {
@@ -208,10 +207,6 @@ public class Player {
 
     public void setCurrentRoom(String currentRoom) {
         this.currentRoom = currentRoom;
-    }
-
-    public int getTries() {
-        return tries;
     }
 
     public List<String> getInventory() {
